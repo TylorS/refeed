@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(name="refeed",
-      packages=['refeed', 'refeed/auth'],
+      packages=['refeed', 'refeed/auth', 'refeed/common'],
       version="0.1.0",
       description="Feedly Python API Wrapper",
       author="Tylor Steinberger",
