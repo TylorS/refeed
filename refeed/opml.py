@@ -9,7 +9,7 @@ def get_opml(token, url=SandBoxURL):
                         ).content
 
 
-def import_opml(token, opml_file, author="", url=SandBoxURL):
+def import_opml(token, opml_file, url=SandBoxURL):
 
     headers = {}
     headers['Content-Type'] = "text/xml"
@@ -18,4 +18,4 @@ def import_opml(token, opml_file, author="", url=SandBoxURL):
     return requests.post(url+"/v3/opml",
                          headers=headers,
                          data=opml_file
-                         )
+                         ).json()
