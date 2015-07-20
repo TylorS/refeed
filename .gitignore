@@ -1,3 +1,4 @@
+build/
 refeed/__pycache__
 refeed/auth/__pycache__
 refeed/common/__pycache__

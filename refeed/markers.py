@@ -2,17 +2,22 @@ from .common import SandBoxURL, get_auth_headers, get_time
 import requests
 
 
-def get_unread_counts(token, newerThan,
+def get_unread_counts(token, newerThan=0,
                       auto_refresh=False,
                       streamId="",
                       url=SandBoxURL):
+
+    payload = {
+        "autorefresh": auto_refresh,
+        "newerThan": newerThan
+    }
+
+    if streamId is not "":
+        payload['streamId'] = streamId
+
     return requests.get(url+'/v3/markers/counts',
                         headers=get_auth_headers(token),
-                        params={
-                            "autorefresh": auto_refresh,
-                            "newerThan": newerThan,
-                            "streamId": streamId
-                        }).json()
+                        params=payload).json()
 
 
 def mark_entries_read(token, entries, url=SandBoxURL):
@@ -140,21 +145,27 @@ def mark_unsaved(token, type, type_ids, url=SandBoxURL):
                          ).json()
 
 
-def get_reads(token, newerThan, url=SandBoxURL):
+def get_reads(token, newerThan=0, url=SandBoxURL):
+
+    payload = {}
+
+    if newerThan > 0 :
+        payload['newerThan'] = newerThan
 
     return requests.get(url+'/v3/markers/reads',
-                        params={
-                            "newerThan": newerThan
-                        },
+                        params=payload,
                         headers=get_auth_headers(token)
                         ).json()
 
 
-def get_tags(token, newerThan, url=SandBoxURL):
+def get_tags(token, newerThan=0, url=SandBoxURL):
+
+    payload = {}
+
+    if newerThan > 0 :
+        payload['newerThan'] = newerThan
 
     return requests(url++'/v3/markers/tags',
-                    params={
-                        "newerThan": newerThan
-                    },
+                    params=payload,
                     headers=get_auth_headers(token)
                     ).json()

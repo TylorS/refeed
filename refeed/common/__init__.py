@@ -12,16 +12,27 @@ CloudURL = 'https://cloud.feedly.com'
 scope = "https://cloud.feedly.com/subscriptions"
 
 headers = {
-	"Content-Type": "application/json"
+    "Content-Type": "application/json"
 }
 
+
 def get_auth_headers(token):
+    """
+    Get Headers for a request
 
-	headers = {}
-	headers['Content-Type'] = "application/json"
-	headers['Authorization'] = 'OAuth ' + token
+    :param token: An access token
+    :returns: Dict with Content-Type and Authorization Headers
+    """
+    headers = {}
+    headers['Content-Type'] = "application/json"
+    headers['Authorization'] = 'OAuth ' + token
 
-	return headers
+    return headers
+
 
 def get_time():
-	return str(Decimal(time()).to_integral_exact())
+    """
+    Get the current time in milliseconds rounded
+    to a whole number.
+    """
+    return str(Decimal(time()).to_integral_exact())

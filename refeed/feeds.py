@@ -4,9 +4,9 @@ import requests
 
 def get_feed(token, id, url=SandBoxURL):
 
-    return requests.get(url+'/v3/feeds'+id,
+    return requests.get(url+'/v3/feeds/'+id,
                         headers=get_auth_headers(token)
-                        )
+                        ).json()
 
 
 def get_metadata(token, ids, url=SandBoxURL):

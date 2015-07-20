@@ -17,10 +17,10 @@ def get_stream_ids(streamId,
     }
 
     if newerThan > 0:
-      payload['newerThan'] = newerThan
+        payload['newerThan'] = newerThan
 
-    if continuation != "": 
-      payload['continuation'] = continuation
+    if continuation != "":
+        payload['continuation'] = continuation
 
     return requests.get(
                         url+"/v3/streams/ids?streamId="+streamId,

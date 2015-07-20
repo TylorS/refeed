@@ -12,14 +12,17 @@ from refeed.common import(
     scope,
     headers)
 
-API_URL = SandBoxURL + '/v3/auth'
-
 
 class FeedlyClient():
+
+    """
+    This is a simple client for feedly powered by PyQt5.
+    """
 
     def __init__(self):
         super().__init__()
 
+    # Used by obtain_code
     def parse_code(self):
         if oauth2_redirect in self.engine.url().toString():
             self.webview.close()
@@ -27,8 +30,12 @@ class FeedlyClient():
             self.code = parse['code']
             self.app.exit()
 
-    def obtain_code(self, url=API_URL+'/auth', state=""):
+    def obtain_code(self, url=SandBoxURL, state=""):
+        """Obtain an application code
 
+        :param url: A Base url for requests, optional
+        :param state: Additional if to be returned, optional
+        """
         self.app = QApplication([])
 
         payload = {
@@ -39,7 +46,10 @@ class FeedlyClient():
             "state": state
         }
 
-        res = requests.get(url, params=payload, headers=headers)
+        res = requests.get(url+"/v3/auth/auth",
+                           params=payload,
+                           headers=headers)
+
         self.webview = QMainWindow()
 
         self.engine = QWebEngineView()
@@ -50,7 +60,12 @@ class FeedlyClient():
         self.webview.show()
         self.app.exec_()
 
-    def get_access_token(self, url=API_URL+"/token", state=''):
+    def get_access_token(self, url=SandBoxURL, state=''):
+        """Obtain an access token
+
+        :param url: A Base url for requests, optional
+        :param state: Additional if to be returned, optional
+        """
 
         payload = {
             'code': self.code,
@@ -61,7 +76,7 @@ class FeedlyClient():
             'grant_type': 'authorization_code'
         }
 
-        res = requests.post(url,
+        res = requests.post(url+"/v3/auth/token",
                             params=payload,
                             headers=headers).json()
 
@@ -73,7 +88,12 @@ class FeedlyClient():
         self.access_token = res['access_token']
         self.expires_in = res['expires_in']
 
-    def get_refresh_token(self, url=API_URL+"/token", state=''):
+    def get_refresh_token(self, url=SandBoxURL, state=''):
+        """Obtain an application code
+
+        :param url: A Base url for requests, optional
+        :param state: Additional if to be returned, optional
+        """
 
         payload = {
             'refresh_token': self.refresh_token,
@@ -82,7 +102,7 @@ class FeedlyClient():
             'grant_type': 'refresh_token'
         }
 
-        res = requests.post(url,
+        res = requests.post(url+"/v3/auth/token",
                             params=payload,
                             headers=headers).json()
 
@@ -91,3 +111,18 @@ class FeedlyClient():
         self.expires_in = res['expires_in']
         self.token_type = res['token_type']
         self.plan = res['plan']
+
+    def revoke_refresh_token(self, url=SandBoxURL):
+        """
+        Logout, Refresh token will no longer be valid
+
+        :param url: A Base url for requests, optional
+        """
+
+        requests.post(url+"/v3/auth/token", 
+                      params={
+                        "refresh_token": self.refresh_token,
+                        "client_id": client_id,
+                        "client_secret": client_secret,
+                        "grant_type": "revoke_token"
+                      }, headers=headers)
